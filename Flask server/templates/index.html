@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature and Humidity</title>
+    <script>
+        // Function to fetch temperature and humidity data
+        function fetchData() {
+        fetch('/data')  // Send a GET request to /data
+            .then(response => response.json())  // Parse the JSON response
+            .then(data => {
+                // Update the displayed temperature and humidity
+                document.getElementById("temp").innerText = data.temperature !== null ? data.temperature.toFixed(2) + " °C" : "N/A";
+                document.getElementById("hum").innerText = data.humidity !== null ? data.humidity.toFixed(2) + " %" : "N/A";
+            })
+            .catch(error => console.error('Error:', error));  // Handle errors
+     }
+
+        setInterval(fetchData, 4000);  // Fetch data every 4 seconds
+    </script>
+</head>
+<body>
+    <h1>Temperature and Humidity</h1>
+    <p>Temperature: <span id="temp">Loading...</span></p>
+    <p>Humidity: <span id="hum">Loading...</span></p>
+</body>
+</html>
