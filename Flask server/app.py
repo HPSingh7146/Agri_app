@@ -1,4 +1,7 @@
 from flask import Flask, request, jsonify, render_template
+import csv
+import time
+import threading
 
 app = Flask(__name__)
 
@@ -15,7 +18,6 @@ def update():
     temperature = request.args.get('temperature', type=float)
     humidity = request.args.get('humidity', type=float)
 
-    # Print received values for debugging
     print(f'Received temperature: {temperature}, humidity: {humidity}')
 
     if temperature is None or humidity is None:
@@ -27,5 +29,17 @@ def update():
 def data():
     return jsonify({'temperature': temperature, 'humidity': humidity})
 
+def log_data_to_csv():
+    global temperature, humidity
+    if temperature is not None and humidity is not None:
+        with open('data_log.csv', mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([time.strftime("%Y-%m-%d %H:%M:%S"), temperature, humidity])
+        print(f"Logged data: Temperature = {temperature}, Humidity = {humidity}")
+    # Schedule the next log after 1 hour
+    threading.Timer(3600, log_data_to_csv).start()
+
 if __name__ == '__main__':
+    # Start logging every hour when the app starts
+    threading.Timer(3600, log_data_to_csv).start()
     app.run(host='0.0.0.0', port=5000, debug=True)

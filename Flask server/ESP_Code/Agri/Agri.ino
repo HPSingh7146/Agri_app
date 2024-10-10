@@ -50,8 +50,8 @@ void loop() {
         client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                     "Host: " + serverName + "\r\n" +
                     "Connection: close\r\n\r\n");
-        delay(1000);  // Delay for stability
+        delay(3000);  // Delay for stability
     }
 
-    delay(4000);  // Send data every 4 seconds
+    delay(10000);  // Send data every 10 seconds
 }
